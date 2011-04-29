@@ -70,13 +70,28 @@ class AmazonECS
   /**
    * execute search
    *
-   * @param string $pattern
+   * @param string $pattern Keywords to search for
+   * @param integer $nodeId
    *
    * @return array|object return type depends on setting
    *
    * @see returnType()
    */
-  public function search($pattern, $nodeId = null)
+  public function search($pattern, $nodeId = null) {
+    return searchWithArgs(array('Keywords' => $pattern), nodeId);
+  }
+
+  /**
+   * execute search
+   *
+   * @param array $args Args to search on e.g. 'Author'=>'Iain M. Banks'
+   * @param integer $nodeId
+   *
+   * @return array|object return type depends on setting
+   *
+   * @see returnType()
+   */
+  public function searchWithArgs($args, $nodeId = null)
   {
     if (false === isset($this->requestConfig['category']))
     {
@@ -91,17 +106,16 @@ class AmazonECS
 
     $params = $this->buildRequestParams('ItemSearch', array_merge(
       array(
-        'Keywords' => $pattern,
         'SearchIndex' => $this->requestConfig['category']
       ),
-      $browseNode
+      $browseNode,
+      $args
     ));
 
     return $this->returnData(
       $this->performSoapRequest("ItemSearch", $params)
     );
   }
-
 
   public function lookup($asin)
   {
