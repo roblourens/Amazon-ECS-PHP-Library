@@ -78,7 +78,7 @@ class AmazonECS
    * @see returnType()
    */
   public function search($pattern, $nodeId = null) {
-    return searchWithArgs(array('Keywords' => $pattern), nodeId);
+    return $this->searchWithArgs(array('Keywords' => $pattern), $nodeId);
   }
 
   /**
@@ -117,11 +117,14 @@ class AmazonECS
     );
   }
 
-  public function lookup($asin)
+  public function lookup($itemId)
   {
-    $params = $this->buildRequestParams('ItemLookup', array(
-      'ItemId' => $asin,
-    ));
+      return $this->lookupWithArgs(array('ItemId' => $itemId));
+  }
+
+  public function lookupWithArgs($args)
+  {
+    $params = $this->buildRequestParams('ItemLookup', $args);
 
     return $this->returnData(
       $this->performSoapRequest("ItemLookup", $params)

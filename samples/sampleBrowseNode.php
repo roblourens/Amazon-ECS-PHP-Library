@@ -1,24 +1,10 @@
 <?php
-if ("cli" !== PHP_SAPI)
-{
-    echo "<pre>";
-}
 
-
-if (is_file('sampleSettings.php'))
-{
-  include 'sampleSettings.php';
-}
-
-defined('AWS_API_KEY') or define('AWS_API_KEY', 'API KEY');
-defined('AWS_API_SECRET_KEY') or define('AWS_API_SECRET_KEY', 'SECRET KEY');
-defined('AWS_ASSOCIATE_TAG') or define('AWS_ASSOCIATE_TAG', 'ASSOCIATE TAG');
-
-require '../lib/AmazonECS.class.php';
+include '../../settings.php';
 
 try
 {
-    $amazonEcs = new AmazonECS(AWS_API_KEY, AWS_API_SECRET_KEY, 'DE');
+    $amazonEcs = new AmazonECS(AWS_API_KEY, AWS_API_SECRET_KEY, 'US');
 
     // First of all you have to set an another ResponseGroup. If not the request would not be successful
     // Possible Responsegroups: BrowseNodeInfo,MostGifted,NewReleases,MostWishedFor,TopSellers
@@ -26,14 +12,14 @@ try
 
     // Then browse a node like this:  nodeId (See: http://docs.amazonwebservices.com/AWSECommerceService/2010-09-01/DG/index.html?BrowseNodeIDs.html)
     // For example: 542064 on German Amazon is: Software
-    $response = $amazonEcs->browseNodeLookup(542064);
-    //var_dump($response);
+    $response = $amazonEcs->browseNodeLookup(1000);
+    print_r($response);
 
     // The response contains now some information about this Node and its children, ancestors etc.
     // So we picked out one noteId of the childelements: 408306 -> Programmierung (Programming).
     // Now we want to browse this node
-    $response = $amazonEcs->browseNodeLookup(408306);
-    //var_dump($response);
+    $response = $amazonEcs->responseGroup('TopSellers')->browseNodeLookup(1);
+    print_r($response);
 
     // Picking out one childNodeId again
     // 466484 -> Programmiersprachen (Programming languages)
