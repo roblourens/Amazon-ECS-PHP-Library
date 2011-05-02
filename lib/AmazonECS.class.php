@@ -117,11 +117,29 @@ class AmazonECS
     );
   }
 
+  /**
+   * Lookup by ASIN
+   *
+   * @param integer|string $itemId The ASIN to look up
+   *
+   * @return array|object depends on setting
+   *
+   */
   public function lookup($itemId)
   {
       return $this->lookupWithArgs(array('ItemId' => $itemId));
   }
 
+
+  /**
+   * Lookup by custom set of args
+   *
+   * @param array $args The args to look up 
+   * e.g. 'ItemId'=>'1234', 'IdType'=>'ISBN'
+   *
+   * @return array|object depends on setting
+   *
+   */
   public function lookupWithArgs($args)
   {
     $params = $this->buildRequestParams('ItemLookup', $args);
